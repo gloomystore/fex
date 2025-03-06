@@ -1,0 +1,51 @@
+{
+  "name": "fexjs",
+  "version": "1.0.2",
+  "description": "A lightweight and powerful Fetch API wrapper with interceptors, cancel tokens, and timeout support.",
+  "main": "dist/fex.js",
+  "module": "dist/fex.js",
+  "types": "dist/fex.d.ts",
+  "exports": {
+    "import": "./dist/fex.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"No test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browser": {
+    "./dist/fex.js": "./dist/fex.js"
+  },
+  "keywords": [
+    "fetch",
+    "axios-alternative",
+    "http-client",
+    "typescript",
+    "http-request",
+    "fetch-wrapper",
+    "api-client",
+    "http-library",
+    "modern-fetch"
+  ],
+  "author": "gloomystore",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gloomystore/fex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gloomystore/fex/issues"
+  },
+  "homepage": "https://github.com/gloomystore/fex#readme",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/gloomystore"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.2.0"
+  }
+}

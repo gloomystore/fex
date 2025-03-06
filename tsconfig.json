@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "ESNext",
+    "target": "ES6",
+    "moduleResolution": "Node",
+    "declaration": true,  // 타입 정의 파일 생성
+    "sourceMap": true,
+    "strict": true
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fex.js 테스트</title>
+  <script type="module">
+    import fex from "./dist/fex.js";
+
+    fex.get("https://jsonplaceholder.typicode.com/posts/1", {
+      headers: {
+        // mode: 'cors'
+      },
+      
+    }).then((res) => {
+      console.log("✅ 응답:", res.data);
+    }).catch(err => {
+      console.error("❌ 오류 발생:", err);
+    });
+  </script>
+</head>
+<body>
+  <h1>fex.js 테스트 페이지</h1>
+</body>
+</html>
