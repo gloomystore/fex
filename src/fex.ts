@@ -1,4 +1,4 @@
-type FetchConfig = Omit<RequestInit, "headers" | "signal"> & {
+type FetchConfig = Omit<RequestInit, 'headers' | 'signal'> & {
   headers: Record<string, string>;
   baseURL?: string;
   url?: string;
@@ -24,7 +24,7 @@ class FexCancelToken {
     this.controller = new AbortController();
     this.promise = new Promise((resolve) => {
       this.cancel = (message?: string) => {
-        this.reason = message || "Request canceled";
+        this.reason = message || 'Request canceled';
         this.controller.abort();
         resolve();
       };
@@ -91,9 +91,9 @@ class FexInstance {
     };
 
     // ✅ baseURL 적용
-    if (mergedConfig.baseURL && !url.startsWith("http")) {
+    if (mergedConfig.baseURL && !url.startsWith('http')) {
       url =
-        mergedConfig.baseURL.replace(/\/$/, "") + "/" + url.replace(/^\//, "");
+        mergedConfig.baseURL.replace(/\/$/, '') + '/' + url.replace(/^\//, '');
     }
 
     mergedConfig.url = url; // ✅ url 속성 추가
@@ -127,7 +127,7 @@ class FexInstance {
         controller.abort();
       }
 
-      timeoutSignal.addEventListener("abort", () => controller.abort());
+      timeoutSignal.addEventListener('abort', () => controller.abort());
     }
 
     // ✅ 사용자가 제공한 cancelToken을 적용
@@ -148,12 +148,21 @@ class FexInstance {
     };
 
     // ✅ body 추가 (GET/HEAD는 body를 사용하지 않음)
-    if (data && method !== "GET" && method !== "HEAD") {
+    if (data && method !== 'GET' && method !== 'HEAD') {
       if (data instanceof FormData || data instanceof Blob || data instanceof URLSearchParams) {
           fetchConfig.body = data;
       } else {
           fetchConfig.body = JSON.stringify(data);
-          headers.set("Content-Type", "application/json");
+          headers.set('Content-Type', 'application/json');
+      }
+    }
+
+    const isNode = typeof process !== 'undefined' && process.versions?.node;
+    if (isNode && process.env) {
+      if (config.mode === 'cors') {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      } else if (config.mode === 'no-cors') {
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '1';
       }
     }
 
@@ -162,14 +171,14 @@ class FexInstance {
 
       // ✅ Content-Type 기반으로 응답 데이터 변환
       let responseData: any;
-      const contentType = response.headers.get("Content-Type") || "";
-      if (contentType.includes("application/json")) {
+      const contentType = response.headers.get('Content-Type') || '';
+      if (contentType.includes('application/json')) {
         responseData = await response.json();
-      } else if (contentType.includes("text/")) {
+      } else if (contentType.includes('text/')) {
         responseData = await response.text();
       } else if (
-        contentType.includes("image/") ||
-        contentType.includes("application/octet-stream")
+        contentType.includes('image/') ||
+        contentType.includes('application/octet-stream')
       ) {
         responseData = await response.blob();
       } else {
@@ -198,9 +207,9 @@ class FexInstance {
 
       return finalResponse;
     } catch (error: unknown) {
-      if (error instanceof Error && error.name === "AbortError") {
-        console.error("⏳ 요청이 타임아웃되었거나 취소되었습니다.");
-        return Promise.reject(new Error("Request aborted"));
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.error('⏳ 요청이 타임아웃되었거나 취소되었습니다.');
+        return Promise.reject(new Error('Request aborted'));
       }
 
       for (const { onRejected } of this.responseInterceptors) {
@@ -211,23 +220,23 @@ class FexInstance {
   }
 
   get<T = any>(url: string, config?: Partial<FetchConfig>) {
-    return this.request<T>("GET", url, undefined, config);
+    return this.request<T>('GET', url, undefined, config);
   }
 
   post<T = any>(url: string, data?: any, config?: Partial<FetchConfig>) {
-    return this.request<T>("POST", url, data, config);
+    return this.request<T>('POST', url, data, config);
   }
 
   put<T = any>(url: string, data?: any, config?: Partial<FetchConfig>) {
-    return this.request<T>("PUT", url, data, config);
+    return this.request<T>('PUT', url, data, config);
   }
 
   delete<T = any>(url: string, config?: Partial<FetchConfig>) {
-    return this.request<T>("DELETE", url, undefined, config);
+    return this.request<T>('DELETE', url, undefined, config);
   }
 
   options<T = any>(url: string, config?: Partial<FetchConfig>) {
-    return this.request<T>("OPTIONS", url, undefined, config);
+    return this.request<T>('OPTIONS', url, undefined, config);
   }
 
   create(config: Partial<FetchConfig> = {}) {
