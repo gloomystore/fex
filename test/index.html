@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fex.js 테스트</title>
+  <script type="module">
+    import fex, { FexCancelToken } from '../dist/fex.js';
+
+    async function testTimeout() {
+      console.log("🕒 타임아웃 테스트 시작...");
+
+      try {
+        const response = await fex.get("https://httpbin.org/delay/5", {
+          timeout: 3000, // 3초 후 타임아웃 발생 (httpbin은 5초 뒤 응답)
+        });
+        console.log("✅ 성공 응답:", response.data);
+      } catch (error) {
+        console.error("❌ 타임아웃 발생:", error.message);
+      }
+    }
+
+    async function testNormalRequest() {
+      console.log("📡 정상 요청 테스트 시작...");
+
+      try {
+        const response = await fex.get("https://httpbin.org/get", {
+          timeout: 5000, // 충분한 시간 (5초) 줌
+        });
+        console.log("✅ 정상 응답:", response.data);
+      } catch (error) {
+        console.error("❌ 요청 실패:", error.message);
+      }
+    }
+
+    async function testCancelToken() {
+      console.log("🚨 요청 취소 테스트 시작...");
+      const cancelToken = new FexCancelToken();
+
+      setTimeout(() => {
+        console.log("🛑 요청을 취소합니다.");
+        cancelToken.cancel("테스트에서 요청을 취소함");
+      }, 2000); // 2초 후 요청 취소
+
+      try {
+        const response = await fex.get("https://httpbin.org/delay/5", {
+          cancelToken,
+        });
+        console.log("✅ 성공 응답:", response.data);
+      } catch (error) {
+        console.error("❌ 요청 취소됨:", error.message);
+      }
+    }
+
+    // ✅ 테스트 실행
+    testTimeout();
+    setTimeout(() => testNormalRequest(), 5000); // 5초 후 실행
+    setTimeout(() => testCancelToken(), 10000); // 10초 후 실행
+
+  </script>
+</head>
+<body>
+  <h1>fex.js 테스트 페이지</h1>
+</body>
+</html>

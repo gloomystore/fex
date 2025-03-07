@@ -1,6 +1,6 @@
 {
   "name": "fexjs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight and powerful Fetch API wrapper with interceptors, cancel tokens, and timeout support.",
   "main": "dist/fex.js",
   "module": "dist/fex.js",
@@ -44,8 +44,8 @@
     "type": "github",
     "url": "https://github.com/sponsors/gloomystore"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/node": "^22.13.9",
     "typescript": "^5.2.0"
   }
 }

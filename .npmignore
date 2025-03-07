@@ -2,3 +2,4 @@ use.gif
 node_modules/
 public/
 tsconfig.json
+./test/
