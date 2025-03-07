@@ -19,6 +19,10 @@ All notable changes will be documented in this file.
 - `https` module is now only used in Node.js environments to prevent browser-related issues.
 - Ensured `withCredentials` and `mode` options cannot be used together to avoid conflicts.
 
+## [1.0.8] - 2025-03-07
+### 🐛 Fixed
+- removed `https` module and `NODE_TLS_REJECT_UNAUTHORIZED ` settings
+
 
 <!-- ## [1.0.1] - YYYY-MM-DD
 ### 🐛 Fixed

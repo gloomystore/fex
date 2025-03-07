@@ -1,6 +1,6 @@
 {
   "name": "fexjs",
-  "version": "1.0.4",
+  "version": "1.0.8",
   "description": "A lightweight and powerful Fetch API wrapper with interceptors, cancel tokens, and timeout support.",
   "main": "dist/fex.js",
   "module": "dist/fex.js",
@@ -47,8 +47,5 @@
   "devDependencies": {
     "@types/node": "^22.13.9",
     "typescript": "^5.2.0"
-  },
-  "optionalDependencies": {
-    "https": "^1.0.0"
   }
 }

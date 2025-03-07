@@ -126,17 +126,6 @@ class FexInstance {
       mergedConfig.cancelToken.promise.then(() => controller.abort());
     }
 
-    const isNode = typeof process !== "undefined" && process.versions?.node;
-    const agent = isNode ? new (await import("https")).Agent({ rejectUnauthorized: false }) : undefined;
-
-    if (isNode && process.env) {
-      if (mergedConfig.mode === "cors") {
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-      } else if (mergedConfig.mode === "no-cors") {
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
-      }
-    }
-
     const {
       headers: _,
       timeout: __,
@@ -148,7 +137,6 @@ class FexInstance {
       headers,
       signal: controller.signal,
       ...restConfig,
-      ...(isNode ? { agent } : {}),
     };
 
     if (data && method !== "GET" && method !== "HEAD") {
