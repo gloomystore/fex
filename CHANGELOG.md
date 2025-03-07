@@ -10,6 +10,16 @@ All notable changes will be documented in this file.
 - Cancel tokens for request cancellation.
 - Timeout support.
 
+## [1.0.5] - 2025-03-07
+### 🔧 Improved
+- Enhanced TypeScript typings for stricter type safety.
+- Improved error handling for response interceptors.
+
+### 🐛 Fixed
+- `https` module is now only used in Node.js environments to prevent browser-related issues.
+- Ensured `withCredentials` and `mode` options cannot be used together to avoid conflicts.
+
+
 <!-- ## [1.0.1] - YYYY-MM-DD
 ### 🐛 Fixed
 - Fixed bug with timeout handling in `fetch`.

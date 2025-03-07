@@ -47,5 +47,8 @@
   "devDependencies": {
     "@types/node": "^22.13.9",
     "typescript": "^5.2.0"
+  },
+  "optionalDependencies": {
+    "https": "^1.0.0"
   }
 }
