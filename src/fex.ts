@@ -22,7 +22,7 @@ type FetchConfig = Omit<RequestInit, "headers" | "signal"> & {
   cancelToken?: FexCancelToken;
 } & XOR<{ mode?: RequestMode }, { withCredentials?: boolean }>;
 
-interface FexResponse<T> {
+interface FexResponse<T = any> {
   data: T;
   status: number;
   statusText: string;
@@ -237,4 +237,4 @@ class FexInstance {
 
 const fex = new FexInstance();
 export default fex;
-export { FexCancelToken };
+export { FexCancelToken, FetchConfig, FexResponse, FexError, FexInstance };

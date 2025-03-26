@@ -1,4 +1,4 @@
-import fex from '../dist/fex';
+import fex, { FexError, FexResponse } from '../dist/fex';
 
 // ✅ 서버 환경에서만 TLS 인증 무시
 if (typeof window === 'undefined') {
@@ -34,7 +34,7 @@ fexInstance.interceptors.request.use(
 
 // ✅ 응답 인터셉터
 fexInstance.interceptors.response.use(
-  (response) => {
+  (response: FexResponse) => {
     console.log('✅ 응답 받음:', {
       status: response.status,
       statusText: response.statusText,
@@ -42,7 +42,7 @@ fexInstance.interceptors.response.use(
     });
     return response;
   },
-  (error) => {
+  (error: FexError) => {
     console.error('❌ 요청 실패:', {
       status: error.response?.status,
       statusText: error.response?.statusText,
