@@ -23,6 +23,10 @@ All notable changes will be documented in this file.
 ### 🐛 Fixed
 - removed `https` module and `NODE_TLS_REJECT_UNAUTHORIZED ` settings
 
+## [1.0.9] - 2025-03-26
+### 🐛 Fixed
+- added FexError type.
+
 
 <!-- ## [1.0.1] - YYYY-MM-DD
 ### 🐛 Fixed

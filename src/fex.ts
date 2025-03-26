@@ -1,5 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+interface FexError<T = any> extends Error {
+  isFexError: boolean
+  response?: FexResponse<T>
+  request?: Response
+  config: FetchConfig
+  cause?: any
+}
+
+type FexErrorHandler<T = any> = (error: FexError<T>) => unknown
+
 type XOR<T, U> = (T | U) extends object
   ? (T extends U ? never : T) | (U extends T ? never : U)
   : T | U;
@@ -50,7 +60,7 @@ class FexInstance {
     request: {
       use: (
         onFulfilled: (config: FetchConfig) => FetchConfig,
-        onRejected?: (error: unknown) => unknown
+        onRejected?: (error: FexError) => unknown
       ) => {
         this.requestInterceptors.push({ onFulfilled, onRejected });
       },
@@ -58,7 +68,7 @@ class FexInstance {
     response: {
       use: (
         onFulfilled: <T>(response: FexResponse<T>) => FexResponse<T> | Promise<FexResponse<T>>,
-        onRejected?: (error: unknown) => unknown
+        onRejected?: FexErrorHandler
       ) => {
         this.responseInterceptors.push({ onFulfilled, onRejected });
       },
@@ -67,11 +77,11 @@ class FexInstance {
 
   private requestInterceptors: {
     onFulfilled: (config: FetchConfig) => FetchConfig;
-    onRejected?: (error: unknown) => unknown;
+    onRejected?: (error: FexError) => unknown;
   }[] = [];
   private responseInterceptors: {
     onFulfilled: <T>(response: FexResponse<T>) => FexResponse<T> | Promise<FexResponse<T>>;
-    onRejected?: (error: unknown) => unknown;
+    onRejected?: FexErrorHandler;
   }[] = [];
 
   constructor(config: Partial<FetchConfig> = {}) {
@@ -105,7 +115,7 @@ class FexInstance {
       try {
         mergedConfig = onFulfilled(mergedConfig);
       } catch (error) {
-        if (onRejected) return Promise.reject(onRejected(error));
+        if (onRejected) return Promise.reject(onRejected(error as FexError));
         throw error;
       }
     }
@@ -180,12 +190,11 @@ class FexInstance {
           return await onFulfilled<T>(finalResponse);
         } catch (error) {
           if (onRejected) {
-            return Promise.reject(onRejected(error)); // ✅ 반환값을 무조건 Promise.reject()로 래핑
+            return Promise.reject(onRejected(error as FexError));
           }
           throw error;
         }
       }
-      
 
       return finalResponse;
     } catch (error: unknown) {
@@ -195,7 +204,7 @@ class FexInstance {
       }
 
       for (const { onRejected } of this.responseInterceptors) {
-        if (onRejected) return Promise.reject(onRejected(error));
+        if (onRejected) return Promise.reject(onRejected(error as FexError));
       }
       throw error;
     }
