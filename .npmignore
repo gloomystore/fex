@@ -6,3 +6,4 @@ tsconfig.json
 .git
 src
 test
+package-lock.json

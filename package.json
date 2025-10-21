@@ -1,15 +1,17 @@
 {
   "name": "fexjs",
-  "version": "1.0.14",
+  "version": "1.0.15",
+  "type": "module",
   "description": "A lightweight and powerful Fetch API wrapper with interceptors, cancel tokens, and timeout support.",
   "main": "dist/fex.js",
   "module": "dist/fex.js",
   "types": "dist/fex.d.ts",
   "exports": {
-    "import": "./dist/fex.js"
+    "import": "./dist/fex.js",
+    "types": "./dist/fex.d.ts"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "prepublishOnly": "npm run build",
     "test": "echo \"No test specified\" && exit 1"
   },
@@ -46,7 +48,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.18.12",
+    "tsup": "^8.5.0",
     "typescript": "^5.2.0"
   }
 }
-
