@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-interface FexError<T = any> extends Error {
+interface FexError<T = any, D = any> extends Error {
   isFexError: boolean
-  response?: FexResponse<T>
+  response?: FexResponse<T, D>
   request?: Response
   config: FetchConfig
   cause?: any
 }
 
-type FexErrorHandler<T = any> = (error: FexError<T>) => unknown
+type FexErrorHandler<T = any, D = any> = (error: FexError<T, D>) => unknown
 
 type XOR<T, U> = (T | U) extends object
   ? (T extends U ? never : T) | (U extends T ? never : U)
@@ -22,7 +22,7 @@ type FetchConfig = Omit<RequestInit, "headers" | "signal"> & {
   cancelToken?: FexCancelToken;
 } & XOR<{ mode?: RequestMode }, { withCredentials?: boolean }>;
 
-interface FexResponse<T = any> {
+interface FexResponse<T = any, D = any> {
   data: T;
   status: number;
   statusText: string;
@@ -67,8 +67,8 @@ class FexInstance {
     },
     response: {
       use: (
-        onFulfilled: <T>(response: FexResponse<T>) => FexResponse<T> | Promise<FexResponse<T>>,
-        onRejected?: FexErrorHandler
+        onFulfilled: (response: FexResponse<any, any>) => FexResponse<any, any> | Promise<FexResponse<any, any>>,
+        onRejected?: FexErrorHandler<any, any>
       ) => {
         this.responseInterceptors.push({ onFulfilled, onRejected });
       },
@@ -80,8 +80,8 @@ class FexInstance {
     onRejected?: (error: FexError) => unknown;
   }[] = [];
   private responseInterceptors: {
-    onFulfilled: <T>(response: FexResponse<T>) => FexResponse<T> | Promise<FexResponse<T>>;
-    onRejected?: FexErrorHandler;
+    onFulfilled: (response: FexResponse<any, any>) => FexResponse<any, any> | Promise<FexResponse<any, any>>;
+    onRejected?: FexErrorHandler<any, any>;
   }[] = [];
 
   constructor(config: Partial<FetchConfig> = {}) {
@@ -91,12 +91,12 @@ class FexInstance {
     };
   }
 
-  private async request<T>(
+  private async request<T = any, D = any>(
     method: string,
     url: string,
     data?: unknown,
     config: Partial<FetchConfig> = {}
-  ): Promise<FexResponse<T>> {
+  ): Promise<FexResponse<T, D>> {
     let mergedConfig: FetchConfig = {
       ...this.defaultConfig,
       ...config,
@@ -176,7 +176,7 @@ class FexInstance {
         responseData = (await response.blob()) as T;
       }
 
-      const finalResponse: FexResponse<T> = {
+      const finalResponse: FexResponse<T, D> = {
         data: responseData,
         status: response.status,
         statusText: response.statusText,
@@ -187,10 +187,10 @@ class FexInstance {
 
       for (const { onFulfilled, onRejected } of this.responseInterceptors) {
         try {
-          return await onFulfilled<T>(finalResponse);
+          return await onFulfilled(finalResponse) as FexResponse<T, D>;
         } catch (error) {
           if (onRejected) {
-            return Promise.reject(onRejected(error as FexError));
+            return Promise.reject(onRejected(error as FexError<T, D>));
           }
           throw error;
         }
@@ -210,28 +210,28 @@ class FexInstance {
     }
   }
 
-  get<T>(url: string, config?: Partial<FetchConfig>) {
-    return this.request<T>("GET", url, undefined, config);
+  get<T = any, D = any>(url: string, config?: Partial<FetchConfig>) {
+    return this.request<T, D>("GET", url, undefined, config);
   }
 
-  post<T>(url: string, data?: unknown, config?: Partial<FetchConfig>) {
-    return this.request<T>("POST", url, data, config);
+  post<T = any, D = any>(url: string, data?: unknown, config?: Partial<FetchConfig>) {
+    return this.request<T, D>("POST", url, data, config);
   }
 
-  put<T>(url: string, data?: unknown, config?: Partial<FetchConfig>) {
-    return this.request<T>("PUT", url, data, config);
+  put<T = any, D = any>(url: string, data?: unknown, config?: Partial<FetchConfig>) {
+    return this.request<T, D>("PUT", url, data, config);
   }
 
-  patch<T>(url: string, data?: unknown, config?: Partial<FetchConfig>) {
-    return this.request<T>("PATCH", url, data, config);
+  delete<T = any, D = any>(url: string, config?: Partial<FetchConfig>) {
+    return this.request<T, D>("DELETE", url, undefined, config);
   }
 
-  delete<T>(url: string, config?: Partial<FetchConfig>) {
-    return this.request<T>("DELETE", url, undefined, config);
+  patch<T = any, D = any>(url: string, data?: unknown, config?: Partial<FetchConfig>) {
+    return this.request<T, D>("PATCH", url, data, config);
   }
 
-  options<T>(url: string, config?: Partial<FetchConfig>) {
-    return this.request<T>("OPTIONS", url, undefined, config);
+  options<T = any, D = any>(url: string, config?: Partial<FetchConfig>) {
+    return this.request<T, D>("OPTIONS", url, undefined, config);
   }
 
   create(config: Partial<FetchConfig> = {}) {
@@ -242,4 +242,3 @@ class FexInstance {
 const fex = new FexInstance();
 export default fex;
 export { FexCancelToken, FetchConfig, FexResponse, FexError, FexInstance };
-
