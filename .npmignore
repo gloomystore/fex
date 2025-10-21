@@ -4,3 +4,5 @@ public/
 tsconfig.json
 ./test/
 .git
+src
+test
