@@ -222,6 +222,10 @@ class FexInstance {
     return this.request<T>("PUT", url, data, config);
   }
 
+  patch<T>(url: string, data?: unknown, config?: Partial<FetchConfig>) {
+    return this.request<T>("PATCH", url, data, config);
+  }
+
   delete<T>(url: string, config?: Partial<FetchConfig>) {
     return this.request<T>("DELETE", url, undefined, config);
   }
@@ -238,3 +242,4 @@ class FexInstance {
 const fex = new FexInstance();
 export default fex;
 export { FexCancelToken, FetchConfig, FexResponse, FexError, FexInstance };
+
